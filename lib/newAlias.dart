@@ -15,6 +15,7 @@ class _NewAliasScreenState extends State<NewAliasScreen> {
   void submitButtonPressed() async {
     dropTable('salt');
     dropTable('hash');
+    dropTable('items');
 
     createByteTable('salt');
     createByteTable('hash');

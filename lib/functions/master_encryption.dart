@@ -40,6 +40,7 @@ Future<List<int>> generateHashBytesOf(String plaintext, List<int> nonce) async {
 }
 
 List<int> generateRandomSalt() {
+  // Generates 128 bit salt
   List<int> saltBytes = [];
   for (int i = 0; i < 16; i++) {
     saltBytes.add(Random.secure().nextInt(256));
@@ -50,17 +51,18 @@ List<int> generateRandomSalt() {
 
 
 Future<bool> authenticate(String password) async {
-  // 128 bit / 16 byte salt
+  bool hashesMatch = true;
+
   List<int> salt = getBytesFromMap(await getRowsFromTable('salt'));
-  bool areEqual = true;
   List<int> bytes1 = getBytesFromMap(await getRowsFromTable('hash'));
   List<int> bytes2 = await generateHashBytesOf(password, salt);
+
   int i = 0;
-  while (i < bytes1.length && areEqual) {
+  while (i < bytes1.length && hashesMatch) {
     if (bytes1[i] != bytes2[i]) {
-      areEqual = false;
+      hashesMatch = false;
     }
     i++;
   }
-  return areEqual;
+  return hashesMatch;
 }
