@@ -1,7 +1,7 @@
-import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:password_vault_mobile/functions/items_management.dart';
 import 'package:password_vault_mobile/main.dart';
+import 'package:password_vault_mobile/new_item.dart';
 
 class VaultScreen extends StatefulWidget {
   const VaultScreen({Key? key}) : super(key: key);
@@ -85,11 +85,10 @@ class _VaultScreenState extends State<VaultScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("ID : " + itemList[index].id.toString(), style: const TextStyle(fontSize: 18),),
-                              Text("Type : " + itemList[index].type, style: const TextStyle(fontSize: 18),),
-                              Text("Username : " + itemList[index].username, style: const TextStyle(fontSize: 18),),
-                              Text("Password : " + itemList[index].password, style: const TextStyle(fontSize: 18),),
-                              Text("IV : " + itemList[index].base64iv, style: const TextStyle(fontSize: 18),),
+                              //Text("ID : " + itemList[index].id.toString(), style: const TextStyle(fontSize: 18),),
+                              Text(" " + itemList[index].type + " : " + itemList[index].username, style: const TextStyle(fontSize: 20),),
+                              //Text("Password : " + itemList[index].password, style: const TextStyle(fontSize: 18),),
+                              //Text("IV : " + itemList[index].base64iv, style: const TextStyle(fontSize: 18),),
                             ],
                           ),
                         ),
@@ -107,11 +106,15 @@ class _VaultScreenState extends State<VaultScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {return NewItemScreen(updateItemList: updateItemList,);}));
+          /*
           Item newItem = Item(type: 'Google', username: 'skata', password: 'testpassword', base64iv: encrypt.IV.fromSecureRandom(16).base64);
           newItem.add();
           setState(() {
             updateItemList();
           });
+
+           */
         },
         child: const Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.blue,
