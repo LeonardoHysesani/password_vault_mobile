@@ -16,7 +16,7 @@ void createByteTable(String table) async {
 }
 
 void createItemsTable(String table) async {
-  await database.execute('CREATE TABLE IF NOT EXISTS $table(username TEXT, password TEXT)');
+  await database.execute('CREATE TABLE IF NOT EXISTS $table(id INTEGER PRIMARY KEY, type TEXT, username TEXT, password TEXT, base64iv TEXT)');
 }
 
 void dropTable(String table) async {
@@ -36,8 +36,6 @@ void insertIntoByteTable(List<int> bytes, String table) async {
 }
 
 void insertIntoItemsTable(Item newItem, String table) async {
-  String username = newItem.username;
-  String password = newItem.password;
   await database.transaction(
           (txn) async {
         await txn.insert(table, newItem.toMap());

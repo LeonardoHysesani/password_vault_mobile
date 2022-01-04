@@ -6,6 +6,8 @@ import 'package:password_vault_mobile/vault.dart';
 import 'functions/database_management.dart';
 import 'functions/master_encryption.dart';
 
+late String plainPassword;
+
 void main() {
   runApp(const MyApp());
 }
@@ -51,7 +53,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
     // Entrance for successful login attempt
     if (authenticated) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {return const VaultScreen();}));
+      plainPassword = passwordFieldController.text;
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {return const VaultScreen();}));
     }
     // Snackbar for failed login attempt
     else {

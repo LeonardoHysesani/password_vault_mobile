@@ -1,6 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:password_vault_mobile/functions/items_management.dart';
+import 'package:password_vault_mobile/main.dart';
 
 class VaultScreen extends StatefulWidget {
   const VaultScreen({Key? key}) : super(key: key);
@@ -11,16 +12,18 @@ class VaultScreen extends StatefulWidget {
 
 class _VaultScreenState extends State<VaultScreen> {
   List<Item> itemList = [];
+  bool intendToSearch = false;
 
   @override
   void initState() {
     super.initState();
-    initItemList();
+    updateItemList();
   }
 
-  void initItemList() async {
-    setState(() async {
-      itemList = await getAllItems();
+  void updateItemList() async {
+    itemList = await getAllItems();
+    setState(() {
+      itemList;
     });
   }
 
@@ -30,43 +33,84 @@ class _VaultScreenState extends State<VaultScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Your Vault"),
+        automaticallyImplyLeading: false,
         actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  intendToSearch = !intendToSearch;
+                });
+              },
+              icon: const Icon(Icons.search)
+          ),
           IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+          IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {return const AuthenticationScreen();}));
+              },
+              icon: const Icon(Icons.logout)
+          ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: itemList.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Text(index.toString()),
-                    Text(itemList[index].username),
-                    Text(itemList[index].password),
-                  ],
-                ),
-                ElevatedButton(
-                    onPressed: () {
-
-                    },
-                    child: null
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          if (intendToSearch)
+            Row(
+              children: const [
+                Expanded(
+                  child: TextField(
+                    controller: null,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Search by type or username',
+                    ),
+                  ),
                 ),
               ],
-            )
-          );
-        },
+            ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: itemList.length,
+              itemBuilder: (context, index) {
+                return Card(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("ID : " + itemList[index].id.toString(), style: const TextStyle(fontSize: 18),),
+                              Text("Type : " + itemList[index].type, style: const TextStyle(fontSize: 18),),
+                              Text("Username : " + itemList[index].username, style: const TextStyle(fontSize: 18),),
+                              Text("Password : " + itemList[index].password, style: const TextStyle(fontSize: 18),),
+                              Text("IV : " + itemList[index].base64iv, style: const TextStyle(fontSize: 18),),
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(onPressed: () {}, icon: const Icon(Icons.account_circle)),
+                        IconButton(onPressed: () {}, icon: const Icon(Icons.lock)),
+                        IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+                      ],
+                    )
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          addNewItem(Item(username: 'skata', password: 'testpassword'));
-          if (kDebugMode) {
-            print("Added: " + (await getRecentItem()).toString());
-          }
+        onPressed: () {
+          Item newItem = Item(type: 'Google', username: 'skata', password: 'testpassword', base64iv: encrypt.IV.fromSecureRandom(16).base64);
+          newItem.add();
           setState(() {
-            initItemList();
+            updateItemList();
           });
         },
         child: const Icon(Icons.add, color: Colors.white,),

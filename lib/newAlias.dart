@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:password_vault_mobile/functions/database_management.dart';
+import 'package:password_vault_mobile/functions/items_management.dart';
 import 'package:password_vault_mobile/functions/master_encryption.dart';
 
 class NewAliasScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _NewAliasScreenState extends State<NewAliasScreen> {
 
     createByteTable('salt');
     createByteTable('hash');
+    createItemsTable('items');
 
     List<int> newSalt = generateRandomSalt();
     insertIntoByteTable(newSalt, 'salt');
