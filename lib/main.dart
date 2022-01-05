@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:password_vault_mobile/new_alias.dart';
 import 'package:password_vault_mobile/vault.dart';
 
@@ -40,7 +41,14 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    initDb();
+    dbSetup(setupMasterPassword);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+  }
+
+  void setupMasterPassword() {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {return const NewAliasScreen();}));
   }
 
   void submitButtonPressed() async {
@@ -103,6 +111,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 },
                 child: const Text("Login"),
               ),
+              /*
               const SizedBox(
                 height: 15,
               ),
@@ -112,6 +121,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 },
                 child: const Text("Delete this alias and create a new one"),
               ),
+
+               */
             ],
           )
         ),

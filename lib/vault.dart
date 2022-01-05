@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:password_vault_mobile/display_item.dart';
@@ -47,6 +45,7 @@ class _VaultScreenState extends State<VaultScreen> {
         title: const Text("Your Vault"),
         automaticallyImplyLeading: false,
         actions: [
+          /*
           IconButton(
               onPressed: () {
                 setState(() {
@@ -55,6 +54,8 @@ class _VaultScreenState extends State<VaultScreen> {
               },
               icon: const Icon(Icons.search)
           ),
+
+           */
           IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
           IconButton(
               onPressed: () {

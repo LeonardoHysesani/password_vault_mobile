@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:password_vault_mobile/functions/database_management.dart';
 import 'package:password_vault_mobile/functions/master_encryption.dart';
+import 'package:password_vault_mobile/main.dart';
 
 class NewAliasScreen extends StatefulWidget {
   const NewAliasScreen({Key? key}) : super(key: key);
@@ -24,13 +25,15 @@ class _NewAliasScreenState extends State<NewAliasScreen> {
     List<int> newSalt = generateRandomSalt();
     insertIntoByteTable(newSalt, 'salt');
     insertIntoByteTable(await generateHashBytesOf(passwordFieldController.text, newSalt), 'hash');
+
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {return const AuthenticationScreen();}));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New alias'),
+        title: const Text('Initial setup'),
       ),
       body: SafeArea(
         child: Center(
@@ -52,7 +55,7 @@ class _NewAliasScreenState extends State<NewAliasScreen> {
                   onPressed: () {
                     submitButtonPressed();
                   },
-                  child: const Text("Create"),
+                  child: const Text("Set password"),
                 ),
               ],
             )

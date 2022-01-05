@@ -35,20 +35,20 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
         title: Text(currentItem.type),
       ),
       body: Center(
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  const Center(child: Text('Username', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline),),),
-                  Card(
-                    child: Text(currentItem.username, style: const TextStyle(fontSize: 28),),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
+          child: Card(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  children: [
+                    const Center(child: Text('Username', style: TextStyle(fontSize: 20, color: Colors.grey),),),
+                    Card(
+                      child: Text(currentItem.username, style: const TextStyle(fontSize: 28),),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: currentItem.username));
 
@@ -59,51 +59,51 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         },
-                        icon: const Icon(Icons.copy),
+                        icon: const Icon(Icons.copy, color: Colors.blue,),
                         iconSize: 36,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height / 10,),
-              Column(
-                children: [
-                  const Center(child: Text('Password', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline),),),
-                  Card(
-                    child: Text(currentItem.password, style: const TextStyle(fontSize: 28),),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: currentItem.password));
-
-                        // notify that password has been copied to clipboard
-                        const snackBar = SnackBar(
-                          content: Text('Password copied to clipboard'),
-                          duration: Duration(seconds: 3),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      },
-                      icon: const Icon(Icons.copy),
-                      iconSize: 36,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height / 10,),
-              if (currentItem.notes != '')
-                Column(
-                  children: [
-                    const Center(child: Text('Notes', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline),),),
-                    Card(
-                      child: Text(currentItem.notes, style: const TextStyle(fontSize: 16),),
+                      ),
                     ),
                   ],
                 ),
-            ],
+                SizedBox(height: MediaQuery.of(context).size.height / 10,),
+                Column(
+                  children: [
+                    const Center(child: Text('Password', style: TextStyle(fontSize: 20, color: Colors.grey),),),
+                    Card(
+                      child: Text(currentItem.password, style: const TextStyle(fontSize: 28),),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: currentItem.password));
+
+                          // notify that password has been copied to clipboard
+                          const snackBar = SnackBar(
+                            content: Text('Password copied to clipboard'),
+                            duration: Duration(seconds: 3),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        },
+                        icon: const Icon(Icons.copy, color: Colors.blue,),
+                        iconSize: 36,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height / 10,),
+                if (currentItem.notes != '')
+                  Column(
+                    children: [
+                      const Center(child: Text('Notes', style: TextStyle(fontSize: 20, color: Colors.grey),),),
+                      Card(
+                        child: Text(currentItem.notes, style: const TextStyle(fontSize: 16),),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           ),
-        )
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Stack(

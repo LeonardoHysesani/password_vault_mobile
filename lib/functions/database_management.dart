@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
 
@@ -5,10 +6,15 @@ import 'items.dart';
 
 late Database database;
 
-Future<void> initDb() async {
+Future<void> dbSetup(VoidCallback callback) async {
   database = await openDatabase(
-    path.join(await getDatabasesPath(), 'alias_info.db'),
+    path.join(await getDatabasesPath(), 'password_vault_mobile2.db'),
   );
+  createByteTable('hash');
+  List tempList = await getRowsFromTable('hash');
+  if (tempList.isEmpty) {
+    callback();
+  }
 }
 
 void createByteTable(String table) async {
