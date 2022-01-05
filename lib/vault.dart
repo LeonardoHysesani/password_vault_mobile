@@ -15,12 +15,13 @@ class VaultScreen extends StatefulWidget {
 }
 
 class _VaultScreenState extends State<VaultScreen> {
-  List<Item> itemList = [];
+  late List<Item> itemList;
   bool intendToSearch = false;
 
   @override
   void initState() {
     super.initState();
+    itemList = [];
     updateItemList();
   }
 
@@ -29,6 +30,13 @@ class _VaultScreenState extends State<VaultScreen> {
     setState(() {
       itemList;
     });
+  }
+
+  int generateNextId(List<Item> itemList) {
+    // Assign an initial id of 1 if this is the lists first element
+    // Or
+    // Increment the last items index to avoid id collisions
+    return itemList.isEmpty ? 1 : itemList.last.id + 1;
   }
 
 
@@ -153,7 +161,7 @@ class _VaultScreenState extends State<VaultScreen> {
               MaterialPageRoute(
                   builder: (context) {
                     return NewItemScreen(
-                      id: itemList.last.id + 1, // we increment the id of the last item to avoid collisions
+                      id: generateNextId(itemList),
                       updateItemList: updateItemList,
                     );
                   }
