@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:password_vault_mobile/functions/items_management.dart';
+import 'package:password_vault_mobile/display_item.dart';
+import 'package:password_vault_mobile/functions/items.dart';
 import 'package:password_vault_mobile/main.dart';
 import 'package:password_vault_mobile/new_item.dart';
 
@@ -48,7 +51,8 @@ class _VaultScreenState extends State<VaultScreen> {
               onPressed: () {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {return const AuthenticationScreen();}));
               },
-              icon: const Icon(Icons.logout)
+              icon: const Icon(Icons.logout,),
+            color: Colors.red,
           ),
         ],
       ),
@@ -82,20 +86,34 @@ class _VaultScreenState extends State<VaultScreen> {
                       children: [
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              //Text("ID : " + itemList[index].id.toString(), style: const TextStyle(fontSize: 18),),
-                              Text(" " + itemList[index].type + " : " + itemList[index].username, style: const TextStyle(fontSize: 20),),
-                              //Text("Password : " + itemList[index].password, style: const TextStyle(fontSize: 18),),
-                              //Text("IV : " + itemList[index].base64iv, style: const TextStyle(fontSize: 18),),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width / 2,
+                                    child: Text(itemList[index].type, style: const TextStyle(fontSize: 16, color: Colors.blue),),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width / 2,
+                                    child: Text(itemList[index].username, style: const TextStyle(fontSize: 16),),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
                         const Spacer(),
-                        IconButton(onPressed: () {}, icon: const Icon(Icons.account_circle)),
-                        IconButton(onPressed: () {}, icon: const Icon(Icons.lock)),
-                        IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+                        IconButton(onPressed: () {}, icon: const Icon(Icons.account_circle, color: Colors.blue,)),
+                        IconButton(onPressed: () {}, icon: const Icon(Icons.lock, color: Colors.blue,)),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) {return DisplayItemScreen(item: itemList[index], updateItemList: updateItemList,);}));
+                          },
+                          icon: const Icon(Icons.more_vert),
+
+                        ),
                       ],
                     )
                 );
@@ -106,15 +124,17 @@ class _VaultScreenState extends State<VaultScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {return NewItemScreen(updateItemList: updateItemList,);}));
-          /*
-          Item newItem = Item(type: 'Google', username: 'skata', password: 'testpassword', base64iv: encrypt.IV.fromSecureRandom(16).base64);
-          newItem.add();
-          setState(() {
-            updateItemList();
-          });
-
-           */
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) {
+                    return NewItemScreen(
+                      id: itemList.last.id + 1, // we increment the id of the last item to avoid collisions
+                      updateItemList: updateItemList,
+                    );
+                  }
+                  )
+          );
         },
         child: const Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.blue,

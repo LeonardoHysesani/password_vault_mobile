@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
 
-import 'items_management.dart';
+import 'items.dart';
 
 late Database database;
 
@@ -12,11 +12,11 @@ Future<void> initDb() async {
 }
 
 void createByteTable(String table) async {
-  await database.execute('CREATE TABLE $table (bytes INTEGER)');
+  await database.execute('CREATE TABLE IF NOT EXISTS $table (bytes INTEGER)');
 }
 
-void createItemsTable(String table) async {
-  await database.execute('CREATE TABLE IF NOT EXISTS $table(id INTEGER PRIMARY KEY, type TEXT, username TEXT, password TEXT, base64iv TEXT)');
+void createItemsTable() async {
+  await database.execute('CREATE TABLE IF NOT EXISTS items(id INTEGER PRIMARY KEY, base64iv TEXT, type TEXT, username TEXT, password TEXT, notes TEXT)');
 }
 
 void dropTable(String table) async {
@@ -35,16 +35,27 @@ void insertIntoByteTable(List<int> bytes, String table) async {
   }
 }
 
-void insertIntoItemsTable(Item newItem, String table) async {
+void insertIntoItemsTable(Item newItem) async {
   await database.transaction(
           (txn) async {
-        await txn.insert(table, newItem.toMap());
+        await txn.insert('items', newItem.toMap());
       }
   );
 }
 
-
-
 Future<List<Map>> getRowsFromTable(String table) async {
   return await database.rawQuery('SELECT * FROM $table');
+}
+
+void deleteIdInItemsTable(int id) async {
+  await database.transaction(
+          (txn) async {
+        await txn.delete('items', where: 'id = ?', whereArgs: [id]);
+      }
+  );
+}
+
+void deleteAndInsert(Item item) {
+  deleteIdInItemsTable(item.id);
+  insertIntoItemsTable(item);
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:password_vault_mobile/newAlias.dart';
+import 'package:password_vault_mobile/new_alias.dart';
 import 'package:password_vault_mobile/vault.dart';
 
 import 'functions/database_management.dart';

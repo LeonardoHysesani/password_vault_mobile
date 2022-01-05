@@ -13,10 +13,11 @@ Future<List<Item>> getAllItems() async {
     items.add(
         Item(
           id: item.values.elementAt(0),
-          type: item.values.elementAt(1),
-          username: item.values.elementAt(2),
-          password: item.values.elementAt(3),
-          base64iv: item.values.elementAt(4),
+          base64iv: item.values.elementAt(1),
+          type: item.values.elementAt(2),
+          username: item.values.elementAt(3),
+          password: item.values.elementAt(4),
+          notes: item.values.elementAt(5),
         ).decrypted()
     );
   }
@@ -44,66 +45,90 @@ String getKeySource() {
 }
 
 String encryptString(String plaintext, String base64iv) {
-  final key = Key.fromUtf8(getKeySource());
-  final iv = IV.fromBase64(base64iv);
-  final encrypter = Encrypter(AES(key));
+  if (plaintext != '') {
+    final key = Key.fromUtf8(getKeySource());
+    final iv = IV.fromBase64(base64iv);
+    final encrypter = Encrypter(AES(key));
 
-  final encrypted = encrypter.encrypt(plaintext, iv: iv);
-  return encrypted.base64;
+    final encrypted = encrypter.encrypt(plaintext, iv: iv);
+    return encrypted.base64;
+  }
+  else {
+    return '';
+  }
 }
 
 String decryptString(String base64str, String base64iv) {
-  final key = Key.fromUtf8(getKeySource());
-  final iv = IV.fromBase64(base64iv);
-  final decrypter = Encrypter(AES(key));
+  if (base64str != '') {
+    final key = Key.fromUtf8(getKeySource());
+    final iv = IV.fromBase64(base64iv);
+    final decrypter = Encrypter(AES(key));
 
-  final decrypted = decrypter.decrypt64(base64str, iv: iv);
-  return decrypted;
+    final decrypted = decrypter.decrypt64(base64str, iv: iv);
+    return decrypted;
+  }
+  else {
+    return '';
+  }
 }
 
+
 class Item {
-  var id;
+  final int id;
   final String type;
   final String username;
   final String password;
   final String base64iv;
+  final String notes;
 
   Item({
-    this.id,
+    required this.id,
     required this.type,
     required this.username,
     required this.password,
     required this.base64iv,
+    required this.notes,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'base64iv': base64iv,
       'type': type,
       'username': username,
       'password': password,
-      'base64iv': base64iv,
+      'notes': notes,
     };
   }
 
   @override
   String toString() {
-    return 'Item{username: $username, password: $password}';
+    return 'Item{username: $username, password: $password, notes: $notes}';
   }
 
   void add() {
     // create table if it doesn't exist already
-    createItemsTable('items');
+    createItemsTable();
     // insert current item after encrypting it
-    insertIntoItemsTable(encrypt(), 'items');
+    insertIntoItemsTable(encrypt());
+  }
+
+  void delete() {
+    deleteIdInItemsTable(id);
+  }
+
+  void replaceWith(Item updatedItem) {
+    deleteAndInsert(updatedItem.encrypt());
   }
 
   Item encrypt() {
     Item encryptedItem = Item(
+      id: id,
+      base64iv: base64iv,
       type: encryptString(type, base64iv),
       username: encryptString(username, base64iv),
       password: encryptString(password, base64iv),
-      base64iv: base64iv,
+      notes: encryptString(notes, base64iv),
     );
     return encryptedItem;
   }
@@ -111,10 +136,11 @@ class Item {
   Item decrypted() {
     Item decryptedItem = Item(
       id: id,
+      base64iv: base64iv,
       type: decryptString(type, base64iv),
       username: decryptString(username, base64iv),
       password: decryptString(password, base64iv),
-      base64iv: base64iv,
+      notes: decryptString(notes, base64iv),
     );
     return decryptedItem;
   }
