@@ -76,6 +76,13 @@ class _NewItemScreenState extends State<NewItemScreen> {
                 newItem.add();
                 widget.updateItemList();
                 Navigator.pop(context);
+
+                // notify that item has been saved
+                const snackBar = SnackBar(
+                  content: Text('Saved'),
+                  duration: Duration(seconds: 3),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
               else {
                 // notify to fill required fields

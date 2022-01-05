@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:password_vault_mobile/edit_item.dart';
 
 import 'functions/items.dart';
@@ -45,6 +46,23 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
                   Card(
                     child: Text(currentItem.username, style: const TextStyle(fontSize: 28),),
                   ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: currentItem.username));
+
+                          // notify that username has been copied to clipboard
+                          const snackBar = SnackBar(
+                            content: Text('Username copied to clipboard'),
+                            duration: Duration(seconds: 3),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        },
+                        icon: const Icon(Icons.copy),
+                        iconSize: 36,
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: MediaQuery.of(context).size.height / 10,),
@@ -53,6 +71,23 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
                   const Center(child: Text('Password', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline),),),
                   Card(
                     child: Text(currentItem.password, style: const TextStyle(fontSize: 28),),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: currentItem.password));
+
+                        // notify that password has been copied to clipboard
+                        const snackBar = SnackBar(
+                          content: Text('Password copied to clipboard'),
+                          duration: Duration(seconds: 3),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      },
+                      icon: const Icon(Icons.copy),
+                      iconSize: 36,
+                    ),
                   ),
                 ],
               ),
@@ -112,12 +147,19 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
             ),
           ),
           if (intendToDelete)
-            BlurryDialog(
+            DeleteDialog(
               content: 'Do you want to delete this item?',
               deleteCallBack: () {
                 currentItem.delete();
                 widget.updateItemList();
                 Navigator.pop(context);
+
+                // notify that item has been deleted
+                const snackBar = SnackBar(
+                  content: Text('Deleted'),
+                  duration: Duration(seconds: 3),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               },
               cancelCallBack: () {
                   setState(() {
@@ -132,8 +174,8 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
 }
 
 
-class BlurryDialog extends StatelessWidget {
-  const BlurryDialog({Key? key,required this.content,required this.deleteCallBack,required this.cancelCallBack}) : super(key: key);
+class DeleteDialog extends StatelessWidget {
+  const DeleteDialog({Key? key,required this.content,required this.deleteCallBack,required this.cancelCallBack}) : super(key: key);
 
   final String content;
   final VoidCallback deleteCallBack;

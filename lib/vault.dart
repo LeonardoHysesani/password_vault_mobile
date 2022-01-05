@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:password_vault_mobile/display_item.dart';
 import 'package:password_vault_mobile/functions/items.dart';
 import 'package:password_vault_mobile/main.dart';
@@ -93,7 +94,7 @@ class _VaultScreenState extends State<VaultScreen> {
                                 children: [
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width / 2,
-                                    child: Text(itemList[index].type, style: const TextStyle(fontSize: 16, color: Colors.blue),),
+                                    child: Text(itemList[index].type, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),),
                                   ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width / 2,
@@ -105,14 +106,37 @@ class _VaultScreenState extends State<VaultScreen> {
                           ),
                         ),
                         const Spacer(),
-                        IconButton(onPressed: () {}, icon: const Icon(Icons.account_circle, color: Colors.blue,)),
-                        IconButton(onPressed: () {}, icon: const Icon(Icons.lock, color: Colors.blue,)),
+                        IconButton(
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(text: itemList[index].username));
+
+                              // notify that username has been copied to clipboard
+                              const snackBar = SnackBar(
+                                content: Text('Username copied to clipboard'),
+                                duration: Duration(seconds: 3),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            },
+                            icon: const Icon(Icons.account_circle, color: Colors.blue,)
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(text: itemList[index].password));
+
+                              // notify that password has been copied to clipboard
+                              const snackBar = SnackBar(
+                                content: Text('Password copied to clipboard'),
+                                duration: Duration(seconds: 3),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            },
+                            icon: const Icon(Icons.lock, color: Colors.blue,)
+                        ),
                         IconButton(
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) {return DisplayItemScreen(item: itemList[index], updateItemList: updateItemList,);}));
                           },
                           icon: const Icon(Icons.more_vert),
-
                         ),
                       ],
                     )

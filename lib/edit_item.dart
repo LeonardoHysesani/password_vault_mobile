@@ -86,6 +86,14 @@ class _EditItemScreenState extends State<EditItemScreen> {
               widget.updateItemDisplay(updatedItem);
               widget.updateItemList();
               Navigator.pop(context);
+
+
+              // notify that item has been updated
+              const snackBar = SnackBar(
+                content: Text('Applied changes'),
+                duration: Duration(seconds: 3),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             },
             child: const Text('Apply changes'),
           ),
