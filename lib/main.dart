@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:password_vault_mobile/new_alias.dart';
+import 'package:password_vault_mobile/initial_setup.dart';
 import 'package:password_vault_mobile/vault.dart';
 
 import 'functions/database_management.dart';
@@ -79,39 +79,49 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Password Vault Mobile'),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.info_outline)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
-        ],
-      ),
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                controller: passwordFieldController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (passwordFieldController.text != '') {
-                    submitButtonPressed();
-                  }
-                },
-                child: const Text("Login"),
-              ),
-              /*
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Password Vault Mobile'),
+          actions: [
+            //IconButton(onPressed: () {}, icon: const Icon(Icons.info_outline)),
+            //IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+          ],
+        ),
+        body: SafeArea(
+          child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    controller: passwordFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (passwordFieldController.text != '') {
+                        submitButtonPressed();
+                      }
+                    },
+                    child: const Text("Enter"),
+                  ),
+                  /*
               const SizedBox(
                 height: 15,
               ),
@@ -123,8 +133,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
               ),
 
                */
-            ],
-          )
+                ],
+              )
+          ),
         ),
       ),
     );

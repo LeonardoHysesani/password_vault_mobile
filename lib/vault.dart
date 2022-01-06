@@ -56,7 +56,7 @@ class _VaultScreenState extends State<VaultScreen> {
           ),
 
            */
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+          //IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
           IconButton(
               onPressed: () {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {return const AuthenticationScreen();}));

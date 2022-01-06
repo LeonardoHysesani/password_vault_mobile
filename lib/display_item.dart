@@ -30,11 +30,26 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(currentItem.type),
-      ),
-      body: Center(
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          intendToDelete = false;
+        });
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(currentItem.type),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              // making sure that this button does nothing when the delete dialog is showing
+              if (!intendToDelete) {
+                Navigator.pop(context);
+              }
+            },
+          ),
+        ),
+        body: Center(
           child: Card(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -50,14 +65,17 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
                       alignment: Alignment.topRight,
                       child: IconButton(
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: currentItem.username));
+                          // making sure that this button does nothing when the delete dialog is showing
+                          if (!intendToDelete) {
+                            Clipboard.setData(ClipboardData(text: currentItem.username));
 
-                          // notify that username has been copied to clipboard
-                          const snackBar = SnackBar(
-                            content: Text('Username copied to clipboard'),
-                            duration: Duration(seconds: 3),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            // notify that username has been copied to clipboard
+                            const snackBar = SnackBar(
+                              content: Text('Username copied to clipboard'),
+                              duration: Duration(seconds: 3),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }
                         },
                         icon: const Icon(Icons.copy, color: Colors.blue,),
                         iconSize: 36,
@@ -76,14 +94,17 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
                       alignment: Alignment.topRight,
                       child: IconButton(
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: currentItem.password));
+                          // making sure that this button does nothing when the delete dialog is showing
+                          if (!intendToDelete) {
+                            Clipboard.setData(ClipboardData(text: currentItem.password));
 
-                          // notify that password has been copied to clipboard
-                          const snackBar = SnackBar(
-                            content: Text('Password copied to clipboard'),
-                            duration: Duration(seconds: 3),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            // notify that password has been copied to clipboard
+                            const snackBar = SnackBar(
+                              content: Text('Password copied to clipboard'),
+                              duration: Duration(seconds: 3),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }
                         },
                         icon: const Icon(Icons.copy, color: Colors.blue,),
                         iconSize: 36,
@@ -104,70 +125,74 @@ class _DisplayItemScreenState extends State<DisplayItemScreen> {
               ],
             ),
           ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Stack(
-        fit: StackFit.expand,
-        children: [
-          Positioned(
-            left: 30,
-            bottom: 20,
-            child: FloatingActionButton(
-              heroTag: 'deleteButton',
-              onPressed: () {
-                setState(() {
-                  intendToDelete = true;
-                });
-              },
-              child: const Icon(Icons.delete, color: Colors.white,),
-              backgroundColor: Colors.red,
-            ),
-          ),
-          Positioned(
-            right: 30,
-            bottom: 20,
-            child: FloatingActionButton(
-              heroTag: 'editButton',
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return EditItemScreen(
-                          item: currentItem,
-                          updateItemList: widget.updateItemList,
-                          updateItemDisplay: updateItemDisplay,
-                        );
-                      }
-                    )
-                );
-              },
-              child: const Icon(Icons.edit, color: Colors.white,),
-              backgroundColor: Colors.blue,
-            ),
-          ),
-          if (intendToDelete)
-            DeleteDialog(
-              content: 'Do you want to delete this item?',
-              deleteCallBack: () {
-                currentItem.delete();
-                widget.updateItemList();
-                Navigator.pop(context);
-
-                // notify that item has been deleted
-                const snackBar = SnackBar(
-                  content: Text('Deleted'),
-                  duration: Duration(seconds: 3),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              },
-              cancelCallBack: () {
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned(
+              left: 30,
+              bottom: 20,
+              child: FloatingActionButton(
+                heroTag: 'deleteButton',
+                onPressed: () {
                   setState(() {
-                    intendToDelete = false;
+                    intendToDelete = true;
                   });
-                }
+                },
+                child: const Icon(Icons.delete, color: Colors.white,),
+                backgroundColor: Colors.red,
+              ),
             ),
-        ],
+            Positioned(
+              right: 30,
+              bottom: 20,
+              child: FloatingActionButton(
+                heroTag: 'editButton',
+                onPressed: () {
+                  // making sure that this button does nothing when the delete dialog is showing
+                  if (!intendToDelete) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) {
+                              return EditItemScreen(
+                                item: currentItem,
+                                updateItemList: widget.updateItemList,
+                                updateItemDisplay: updateItemDisplay,
+                              );
+                            }
+                        )
+                    );
+                  }
+                },
+                child: const Icon(Icons.edit, color: Colors.white,),
+                backgroundColor: Colors.blue,
+              ),
+            ),
+            if (intendToDelete)
+              DeleteDialog(
+                  content: 'Do you want to delete this item?',
+                  deleteCallBack: () {
+                    currentItem.delete();
+                    widget.updateItemList();
+                    Navigator.pop(context);
+
+                    // notify that item has been deleted
+                    const snackBar = SnackBar(
+                      content: Text('Deleted'),
+                      duration: Duration(seconds: 3),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  },
+                  cancelCallBack: () {
+                    setState(() {
+                      intendToDelete = false;
+                    });
+                  }
+              ),
+          ],
+        ),
       ),
     );
   }

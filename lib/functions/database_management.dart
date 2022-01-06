@@ -8,8 +8,9 @@ late Database database;
 
 Future<void> dbSetup(VoidCallback callback) async {
   database = await openDatabase(
-    path.join(await getDatabasesPath(), 'password_vault_mobile2.db'),
+    path.join(await getDatabasesPath(), 'password_vault_mobile.db'),
   );
+  // Setup the app if this is its first launch
   createByteTable('hash');
   List tempList = await getRowsFromTable('hash');
   if (tempList.isEmpty) {
