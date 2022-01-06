@@ -1,16 +1,9 @@
 # password_vault_mobile
 
-A new Flutter project.
+A simple flutter app for android, focused on locally storing encrypted data.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Password Vault Mobile provides a way to encrypt and store your sensitive data (accounts credentials and other information) on your mobile device.
+User chooses a master password, which is used to encrypt all of his data.
+Master password hash is generated through PBKDF2-HMAC-SHA512 and AES-128 is used for  user's data manipulation.
